@@ -12,7 +12,7 @@
 <script type='text/javascript'>
 
   // Aca ponemos la referencia a su firebase
-  var messagesRef = new Firebase('https://chatutn-1e655.firebaseio.com/');
+  var messagesRef = new Firebase('https://chatutn-1e655.firebaseio.com/usuarios/');
 
   // Cuando presionen el ENTER , guardamos los datos en firebase.
   $('#messageInput').keypress(function (e) {
@@ -28,7 +28,11 @@
   // agregamos la funcion que funciona de callback que es disparada por cada mensaje de chat.
   messagesRef.on('child_added', function (snapshot) {
     var message = snapshot.val();
-    $('<div/>').text(message.mensaje).prepend($('<em/>').text(message.usuario+': ')).appendTo($('#messagesDiv'));
+    var fechaIngreso = new Date(message.fechaIngreso);
+    var hora = fechaIngreso.getHours();
+    var minutos = fechaIngreso.getMinutes();
+
+    $('<div/>').text(message.mensaje + " -- " + hora + ":" + minutos).prepend($('<em/>').text(message.usuario+': ')).appendTo($('#messagesDiv'));
     $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
   });
 </script>
