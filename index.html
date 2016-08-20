@@ -12,14 +12,15 @@
 <script type='text/javascript'>
 
   // Aca ponemos la referencia a su firebase
-  var messagesRef = new Firebase('https://algo.firebaseio-demo.com/');
+  var messagesRef = new Firebase('https://chatutn-1e655.firebaseio.com/');
 
   // Cuando presionen el ENTER , guardamos los datos en firebase.
   $('#messageInput').keypress(function (e) {
     if (e.keyCode == 13) {
       var name = $('#nameInput').val();
       var text = $('#messageInput').val();
-      messagesRef.push({name:name, text:text});
+      var fecha = Firebase.ServerValue.TIMESTAMP;
+      messagesRef.push({usuario:name, mensaje:text, fechaIngreso:fecha});
       $('#messageInput').val('');
     }
   });
@@ -27,7 +28,7 @@
   // agregamos la funcion que funciona de callback que es disparada por cada mensaje de chat.
   messagesRef.on('child_added', function (snapshot) {
     var message = snapshot.val();
-    $('<div/>').text(message.text).prepend($('<em/>').text(message.name+': ')).appendTo($('#messagesDiv'));
+    $('<div/>').text(message.mensaje).prepend($('<em/>').text(message.usuario+': ')).appendTo($('#messagesDiv'));
     $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
   });
 </script>
