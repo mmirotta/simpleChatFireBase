@@ -1,40 +1,19 @@
 <html>
 <head>
-  <title>Firebase Chat Example</title>
-  <script type="text/javascript" src="https://cdn.firebase.com/v0/firebase.js"></script>
-  <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
-  <link rel="stylesheet" type="text/css" href="https://www.firebase.com/css/example.css">
+  <title>Ejemplo Chat Firebase</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/site.css">
+  <link rel="stylesheet" type="text/css" href="css/morris.css">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+  <link rel="stylesheet" type="text/css" href="css/sb-admin.css">
 </head>
-<body>
-<div id='messagesDiv'></div>
-<input type='text' id='nameInput' placeholder='Name'>
-<input type='text' id='messageInput' placeholder='Message...'>
-<script type='text/javascript'>
-
-  // Aca ponemos la referencia a su firebase
-  var messagesRef = new Firebase('https://chatutn-1e655.firebaseio.com/usuarios/');
-
-  // Cuando presionen el ENTER , guardamos los datos en firebase.
-  $('#messageInput').keypress(function (e) {
-    if (e.keyCode == 13) {
-      var name = $('#nameInput').val();
-      var text = $('#messageInput').val();
-      var fecha = Firebase.ServerValue.TIMESTAMP;
-      messagesRef.push({usuario:name, mensaje:text, fechaIngreso:fecha});
-      $('#messageInput').val('');
-    }
-  });
-
-  // agregamos la funcion que funciona de callback que es disparada por cada mensaje de chat.
-  messagesRef.on('child_added', function (snapshot) {
-    var message = snapshot.val();
-    var fechaIngreso = new Date(message.fechaIngreso);
-    var hora = fechaIngreso.getHours();
-    var minutos = fechaIngreso.getMinutes();
-
-    $('<div/>').text(message.mensaje + " -- " + hora + ":" + minutos).prepend($('<em/>').text(message.usuario+': ')).appendTo($('#messagesDiv'));
-    $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
-  });
-</script>
+<body style="background-color:white">
+  <form action="chat.html" method='post'>
+    <div id='divUsuario' class='col-lg-12'>
+        <span>Ingrese su usuario: </span>
+        <input type='text' id='txtIndexUsuario' class='form-control' style='display:inline; width:15%'>
+        <input type='submit' value='Ingresar' class='btn-primary'/>
+    </div>
+  </form>
 </body>
 </html>

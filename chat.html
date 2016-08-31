@@ -1,0 +1,70 @@
+
+<html>
+<head>
+  <title>Ejemplo Chat Firebase</title>
+  <script type="text/javascript" src="https://cdn.firebase.com/v0/firebase.js"></script>
+  <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/site.css">
+  <link rel="stylesheet" type="text/css" href="css/morris.css">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+  <link rel="stylesheet" type="text/css" href="css/sb-admin.css">
+</head>
+<body style="background-color:white">
+
+<div id='divUsuario' class='col-lg-12'>
+    <span>Usuario: </span>
+    <input type='text' id='txtUsuario' disabled='disabled' value="Request.Form("txtIndexUsuario")" class='form-control' style='display:inline; width:15%'>
+</div>
+<div class='col-lg-12'>
+  <div class='panel panel-primary'>
+    <div class='panel-heading'>
+        <h3 class="panel-title">Chat</h3>
+    </div>
+    <div class='panel-body'>
+      <div class="list-group" id='divMensaje'>
+
+      </div>
+      <div class='text-left'>
+        <input type='text' id='txtMensaje' class='form-control' style='display:inline; width:100%; font-size:14px;' placeholder='Escribir mensaje'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
+
+  // Aca ponemos la referencia a su firebase
+  var mensajeReferencia = new Firebase('https://chatutn-1e655.firebaseio.com/usuarios/');
+
+  // Cuando presionen el ENTER , guardamos los datos en firebase.
+  $('#txtMensaje').keypress(function (e) {
+    if (e.keyCode == 13) {
+      if ($('#txtUsuario').val() != ''){
+        var nombre = $('#txtUsuario').val();
+        var texto = $('#txtMensaje').val();
+        var fecha = Firebase.ServerValue.TIMESTAMP;
+        mensajeReferencia.push({usuario:nombre, mensaje:texto, fechaIngreso:fecha});
+        $('#txtMensaje').val('');
+      }
+    }
+  });
+
+  // agregamos la funcion que funciona de callback que es disparada por cada mensaje de chat.
+  mensajeReferencia.on('child_added', function (snapshot) {
+    var mensaje = snapshot.val();
+    var fechaIngreso = new Date(mensaje.fechaIngreso);
+    var hora = fechaIngreso.getHours();
+    var minutos = fechaIngreso.getMinutes();
+    var color = 'white';
+    if (mensaje.usuario == $('#txtUsuario').val())
+      color='green';
+
+    $('#divMensaje').html($('#divMensaje').html() + '<span class="list-group-item" style="background-color:' + color + '"><span class="badge">' + hora + ':' + minutos + '</span>' + mensaje.usuario + ': ' + mensaje.mensaje + '</span>');
+
+    //$('<div/>').text(mensaje.mensaje + " -- " + hora + ":" + minutos).prepend($('<em/>').text(mensaje.usuario+': ')).appendTo($('#divMensaje'));
+    $('#divMensaje')[0].scrollTop = $('#divMensaje')[0].scrollHeight;
+  });
+</script>
+</body>
+</html>
